@@ -21,7 +21,7 @@
 ## Instructions
 ### Setup
 After cloning the repository:
-1. Change to the [git-localconfig-repo](git-localconfig-repo) folder on the local machine, and initialise the configuration repository. On Windows run
+1. Change to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine, and initialise the configuration repository. On Windows run
 
    ```
    > setup.bat
@@ -32,9 +32,9 @@ After cloning the repository:
    ```
 
 2. Update `application.properties` to point to the local repository.
-    - Save a copy of the file [src/main/resources/application.properties.sample](spring-cloud-config-server/src/main/resources/application.properties.sample)
+    - Save a copy of the file [application.properties.sample](src/main/resources/application.properties.sample)
       as `application.properties`.
-    - Replace the `<uri to repository>` with the path to the [git-localconfig-repo](git-localconfig-repo) folder on the local machine.
+    - Replace the `<uri to repository>` with the path to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine.
       On a Windows machine, the path will take the form
 
         ```

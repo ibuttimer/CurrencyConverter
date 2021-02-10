@@ -94,8 +94,8 @@ E.g. Convert $10.30 United States Dollar to Euro
 
 | Access | URL |
 |--------|-----|
-| Directly | http://localhost:8100/currency-exchange/from/USD/to/EUR/quantity/10.3 |
-| API Gateway | http://localhost:8765/currency-exchange/from/USD/to/EUR/quantity/10.3 |
+| Directly | http://localhost:8100/currency-conversion/from/USD/to/EUR/quantity/10.3 |
+| API Gateway | http://localhost:8765/currency-conversion/from/USD/to/EUR/quantity/10.3 |
 
 ```json
 {

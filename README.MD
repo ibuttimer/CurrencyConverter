@@ -33,7 +33,7 @@ See [currency-exchange-service](currency-exchange-service/README.MD) for more de
 - [Exchange rate example](currency-exchange-service/README.MD#get-exchange-rate)
 
 ## Currency Conversion Service
-A microservice utilising the [Currency Exchange Service](https://openexchangerates.org/) to provide a currency conversion service.
+A microservice utilising the [Currency Exchange Service](#currency-exchange-service) to provide a currency conversion service.
 See [currency-conversion-service](currency-conversion-service/README.MD) for more details.
 
 - [Actuator](http://localhost:8100/actuator)

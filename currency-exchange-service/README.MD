@@ -27,12 +27,12 @@
 ## Instructions
 ### Setup
 #### API key
-- Save a copy of the file [api-keys.properties.sample](currency-exchange-service/src/main/resources/api-keys.properties.sample)
+- Save a copy of the file [api-keys.properties.sample](src/main/resources/api-keys.properties.sample)
 as `api-keys.properties`.
 - Replace the `<app_id>` with an [Open Exchange Rates App ID](https://docs.openexchangerates.org/docs/authentication)  
 #### MySQL database
-- Execute the [create_mysql_schema.sql](currency-exchange-service/src/main/resources/create_mysql_schema.sql) script on the MySQL server to create the schema and user.
-- Save a copy of the file [mysql.properties.sample](currency-exchange-service/src/main/resources/mysql.properties.sample)
+- Execute the [create_mysql_schema.sql](src/main/resources/create_mysql_schema.sql) script on the MySQL server to create the schema and user.
+- Save a copy of the file [mysql.properties.sample](src/main/resources/mysql.properties.sample)
   as `mysql.properties`.
 - Replace the `<path to database>` with the url of the database, 
   e.g. `//localhost:3306/currency_exchange` will connect to a local MySQL server running on the default port.
