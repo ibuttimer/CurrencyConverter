@@ -1,0 +1,240 @@
+package com.example.microservices.currencyexchangeservice.service;
+
+import com.example.microservices.currencyexchangeservice.model.ExchangeRateSource;
+import com.example.microservices.currencyexchangeservice.repository.ExchangeRateSourceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
+
+
+@PropertySource("classpath:api-keys.properties")
+@Service
+public class ExchangeRateSourceService {
+
+    private final String url;
+
+    private final RestTemplate restTemplate;
+
+    @Autowired
+    private ExchangeRateSourceRepository repository;
+
+    @Autowired
+    public ExchangeRateSourceService(RestTemplateBuilder restTemplateBuilder,
+                                     @Value("${org.openexchangerates.url}") String oerUrl,
+                                     @Value("${org.openexchangerates.APP_ID}") String apiKey) {
+        this.restTemplate = restTemplateBuilder.build();
+        this.url = String.format(oerUrl, apiKey);
+    }
+
+    private Optional<ExchangeRateSource> getLatestRates() {
+        Optional<ExchangeRateSource> result = Optional.empty();
+        ResponseEntity<ExchangeRateSource> response = this.restTemplate.getForEntity(url, ExchangeRateSource.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            result = Optional.ofNullable(response.getBody());
+        }
+        return result;
+    }
+
+    public void updateRates() {
+        Optional<ExchangeRateSource> rates = getLatestRates();
+        rates.ifPresent(repository::save);
+    }
+
+
+    public ExchangeRateSource getLatest() {
+        return repository.findFirstByOrderByIdDesc();
+    }
+
+    public ExchangeRateSource save(ExchangeRateSource rateSource) {
+        return repository.save(rateSource);
+    }
+
+}
+
+/*
+{
+    "disclaimer": "Usage subject to terms: https://openexchangerates.org/terms",
+    "license": "https://openexchangerates.org/license",
+    "timestamp": 1612382400,
+    "base": "USD",
+    "rates": {
+        "AED": 3.67295,
+        "AFN": 77.199999,
+        "ALL": 102.9,
+        "AMD": 520.859467,
+        "ANG": 1.794128,
+        "AOA": 656.212,
+        "ARS": 87.8045,
+        "AUD": 1.31188,
+        "AWG": 1.80125,
+        "AZN": 1.700805,
+        "BAM": 1.628691,
+        "BBD": 2,
+        "BDT": 84.851101,
+        "BGN": 1.628066,
+        "BHD": 0.376976,
+        "BIF": 1962,
+        "BMD": 1,
+        "BND": 1.330489,
+        "BOB": 6.914205,
+        "BRL": 5.3673,
+        "BSD": 1,
+        "BTC": 0.000027126325,
+        "BTN": 72.927328,
+        "BWP": 10.965526,
+        "BYN": 2.627018,
+        "BZD": 2.016954,
+        "CAD": 1.27806,
+        "CDF": 1978,
+        "CHF": 0.899326,
+        "CLF": 0.026554,
+        "CLP": 732.700025,
+        "CNH": 6.459087,
+        "CNY": 6.4604,
+        "COP": 3525.89971,
+        "CRC": 613.188583,
+        "CUC": 1,
+        "CUP": 25.75,
+        "CVE": 92.21,
+        "CZK": 21.536318,
+        "DJF": 178.137449,
+        "DKK": 6.1848,
+        "DOP": 58.02,
+        "DZD": 133.24682,
+        "EGP": 15.7194,
+        "ERN": 14.999757,
+        "ETB": 39.39,
+        "EUR": 0.831556,
+        "FJD": 2.05345,
+        "FKP": 0.733023,
+        "GBP": 0.733023,
+        "GEL": 3.32,
+        "GGP": 0.733023,
+        "GHS": 5.845,
+        "GIP": 0.733023,
+        "GMD": 51.5,
+        "GNF": 10102.5,
+        "GTQ": 7.784726,
+        "GYD": 208.968303,
+        "HKD": 7.75135,
+        "HNL": 24.275,
+        "HRK": 6.2919,
+        "HTG": 72.013285,
+        "HUF": 295.40138,
+        "IDR": 14005.655591,
+        "ILS": 3.3011,
+        "IMP": 0.733023,
+        "INR": 72.81225,
+        "IQD": 1462,
+        "IRR": 42105,
+        "ISK": 129.84,
+        "JEP": 0.733023,
+        "JMD": 148.215087,
+        "JOD": 0.709,
+        "JPY": 105.053,
+        "KES": 109.85,
+        "KGS": 83.93724,
+        "KHR": 4071,
+        "KMF": 409.400106,
+        "KPW": 900,
+        "KRW": 1113.419628,
+        "KWD": 0.302947,
+        "KYD": 0.833847,
+        "KZT": 423.637644,
+        "LAK": 9339,
+        "LBP": 1518.5,
+        "LKR": 193.618394,
+        "LRD": 171.325036,
+        "LSL": 15.01,
+        "LYD": 4.47,
+        "MAD": 8.9885,
+        "MDL": 17.325105,
+        "MGA": 3775,
+        "MKD": 51.254334,
+        "MMK": 1345.322023,
+        "MNT": 2854.395944,
+        "MOP": 7.988675,
+        "MRO": 356.999828,
+        "MRU": 36.05,
+        "MUR": 39.7,
+        "MVR": 15.41,
+        "MWK": 780,
+        "MXN": 20.207726,
+        "MYR": 4.0515,
+        "MZN": 75.149996,
+        "NAD": 14.95,
+        "NGN": 380,
+        "NIO": 35.02,
+        "NOK": 8.591335,
+        "NPR": 116.677768,
+        "NZD": 1.388783,
+        "OMR": 0.384966,
+        "PAB": 1,
+        "PEN": 3.642,
+        "PGK": 3.53,
+        "PHP": 48.061003,
+        "PKR": 160.25,
+        "PLN": 3.731135,
+        "PYG": 6896.073179,
+        "QAR": 3.641,
+        "RON": 4.053,
+        "RSD": 97.918394,
+        "RUB": 75.9253,
+        "RWF": 980,
+        "SAR": 3.750761,
+        "SBD": 8.027751,
+        "SCR": 21.20426,
+        "SDG": 55.2,
+        "SEK": 8.411412,
+        "SGD": 1.33364,
+        "SHP": 0.733023,
+        "SLL": 10185.938672,
+        "SOS": 584,
+        "SRD": 14.154,
+        "SSP": 130.26,
+        "STD": 20466.377105,
+        "STN": 20.55,
+        "SVC": 8.755319,
+        "SYP": 512.806429,
+        "SZL": 15.01,
+        "THB": 30.01,
+        "TJS": 11.400358,
+        "TMT": 3.5,
+        "TND": 2.7235,
+        "TOP": 2.304034,
+        "TRY": 7.14792,
+        "TTD": 6.786996,
+        "TWD": 27.954998,
+        "TZS": 2319,
+        "UAH": 27.994172,
+        "UGX": 3672.258843,
+        "USD": 1,
+        "UYU": 42.325029,
+        "UZS": 10550,
+        "VES": 1629224.25,
+        "VND": 23001.187059,
+        "VUV": 108.788426,
+        "WST": 2.510927,
+        "XAF": 545.465047,
+        "XAG": 0.03733296,
+        "XAU": 0.00054542,
+        "XCD": 2.70255,
+        "XDR": 0.695484,
+        "XOF": 545.465047,
+        "XPD": 0.0004386,
+        "XPF": 99.231039,
+        "XPT": 0.00090446,
+        "YER": 250.399984,
+        "ZAR": 14.961017,
+        "ZMW": 21.399876,
+        "ZWL": 322
+    }
+}
+ */

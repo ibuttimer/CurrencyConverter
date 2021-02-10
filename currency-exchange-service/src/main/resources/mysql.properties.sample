@@ -1,0 +1,16 @@
+# database
+spring.datasource.platform=mysql
+# e.g. spring.datasource.url=jdbc:mysql://localhost:3306/currency_exchange
+spring.datasource.url=jdbc:mysql:<path to database>
+spring.datasource.username=cc_user
+spring.datasource.password=cc1234
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+# one of none, validate, update, create or create-drop
+spring.jpa.hibernate.ddl-auto=create-drop
+# one of always, embedded or never
+spring.datasource.initialization-mode=always
+
+# uncomment the below lines to view sql output in console
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true

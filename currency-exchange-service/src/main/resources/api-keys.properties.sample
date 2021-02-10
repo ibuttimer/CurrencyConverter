@@ -1,0 +1,2 @@
+org.openexchangerates.APP_ID=<app_id>
+org.openexchangerates.url=https://openexchangerates.org/api/latest.json?app_id=%s
