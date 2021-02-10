@@ -29,8 +29,8 @@
 ## Instructions
 ### Setup
 #### MySQL database
-- Execute the [create_mysql_schema.sql](currency-conversion-service/src/main/resources/create_mysql_schema.sql) script on the MySQL server to create the schema and user.
-- Save a copy of the file [mysql.properties.sample](currency-conversion-service/src/main/resources/mysql.properties.sample)
+- Execute the [create_mysql_schema.sql](src/main/resources/create_mysql_schema.sql) script on the MySQL server to create the schema and user.
+- Save a copy of the file [mysql.properties.sample](src/main/resources/mysql.properties.sample)
   as `mysql.properties`.
 - Replace the `<path to database>` with the url of the database,
   e.g. `//localhost:3306/currency_conversion` will connect to a local MySQL server running on the default port.
