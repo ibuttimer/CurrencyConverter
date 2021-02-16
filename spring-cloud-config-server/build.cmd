@@ -35,7 +35,7 @@ goto error
 :init
 
 @REM build jar
-mvnw.cmd clean package
+mvnw.cmd clean package %*
 goto end
 
 :error

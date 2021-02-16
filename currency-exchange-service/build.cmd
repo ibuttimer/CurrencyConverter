@@ -29,13 +29,13 @@ echo Please set the JAVA_HOME variable in your environment to match the >&2
 echo location of your Java installation. >&2
 echo.
 goto error
-
+set
 @REM ==== END VALIDATION ====
 
 :init
 
 @REM build jar
-mvnw.cmd clean package
+mvnw.cmd clean package %*
 goto end
 
 :error

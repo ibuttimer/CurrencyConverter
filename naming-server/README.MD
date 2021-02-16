@@ -4,6 +4,7 @@
 1. [Features](#features)
 1. [Instructions](#instructions)
     1. [Build and Run](#build-and-run)
+    1. [Docker](#docker)
 1. [Dashboard](#dashboard)
 1. [Additional Information](#additional-information)
     1. [Reference Documentation](#reference-documentation)
@@ -26,6 +27,13 @@ or on Windows run
 > run.cmd
 ```
 Alternatively, build and run via an IDE.
+
+### Docker
+To build a docker image, open a terminal in the `naming-server` folder and run
+```
+> dockerbuild.cmd
+```
+Or alternatively run the maven `spring-boot:build-image` goal in an IDE.
 
 ## Dashboard
 The Eureka dashboard is available at http://localhost:8761/

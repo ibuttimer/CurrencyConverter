@@ -11,6 +11,7 @@ import org.hamcrest.number.BigDecimalCloseTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = CurrencyConversionServiceApplication.class
 )
+@EnabledIfEnvironmentVariable(named = "ENV", matches = "integration-test")
 @AutoConfigureMockMvc
 class CurrencyConversionControllerTest {
 

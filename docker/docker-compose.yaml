@@ -1,0 +1,169 @@
+# Compose specification (https://github.com/compose-spec/compose-spec/blob/master/spec.md) as of Docker Compose 1.27.0+
+
+# NOTE: This configuration assumes docker-compose is being run from the project's 'docker' folder.
+# E.g.
+#  > cd C:\path\to\project\docker
+#  > docker-compose up
+
+# How to use the host's IP Address inside a Docker container
+# see https://dev.to/natterstefan/docker-tip-how-to-get-host-s-ip-address-inside-a-docker-container-5anh#:~:text=On%20Docker%20for%20Linux%2C%20the,you%20are%20using%20default%20networking.
+
+# Binding from Environment Variables
+# https://docs.spring.io/spring-boot/docs/2.4.2/reference/htmlsingle/#boot-features-external-config-relaxed-binding-from-environment-variables
+
+# 'automatic service discovery' in a user-defined network, allows containers to not only communicate by IP address,
+# but they can also resolve a container name to an IP address
+# https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks
+
+#services:
+#  service-name:
+#    deploy:
+#      resources:
+#        limits:
+#          # https://github.com/compose-spec/compose-spec/blob/master/deploy.md#memory
+#          memory: 1G
+#    # https://github.com/compose-spec/compose-spec/blob/master/spec.md#ports
+#    ports:
+#      - "8000:8000"
+#    # https://github.com/compose-spec/compose-spec/blob/master/spec.md#environment
+#    environment:
+#      RACK_ENV: development
+#    # https://github.com/compose-spec/compose-spec/blob/master/spec.md#volumes
+#    volumes:
+#      volume:container:access_mode
+
+services:
+  currency-conversion:
+    image: ibuttimer/ccm-currency-conversion-service:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ports:
+      - "8100:8100"
+    environment:
+      MYSQL_CONVERSION_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_conversion
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
+      API_GATEWAY_URL: http://api-gateway:8765/
+      CURRENCY_EXCHANGE_URL: http://api-gateway:8765/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+      - spring-cloud-config-server
+      - rabbitmq
+
+  currency-exchange:
+    image: ibuttimer/ccm-currency-exchange-service:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ports:
+      - "8000:8000"
+    environment:
+      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_exchange
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
+      API_GATEWAY_URL: http://api-gateway:8765/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+      - spring-cloud-config-server
+      - rabbitmq
+
+  naming-server:
+    image: ibuttimer/ccm-naming-server:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network
+
+  spring-cloud-config-server:
+    image: ibuttimer/ccm-spring-cloud-config-server:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8888:8888"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      CONFIG_GIT_URI: file://git-localconfig-repo
+    networks:
+      - currency-network
+    volumes:
+      # map default project repository
+      - ../git-localconfig-repo:/git-localconfig-repo
+    depends_on:
+      - naming-server
+
+  api-gateway:
+    image: ibuttimer/ccm-api-gateway:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8765:8765"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+      - rabbitmq
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "9411:9411"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - currency-network
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+
+  rabbitmq:
+    image: rabbitmq:3.8.11-management
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+    ports:
+      - "5672:5672"     # AMQP connections
+      - "15672:15672"   # management port
+    networks:
+      - currency-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+networks:
+  currency-network:

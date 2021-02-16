@@ -33,9 +33,10 @@ goto error
 @REM ==== END VALIDATION ====
 
 :init
+call clr-localdev-env.bat
 
-@REM build jar
-mvnw.cmd clean package %*
+@REM build docker image
+mvnw.cmd spring-boot:build-image %*
 goto end
 
 :error

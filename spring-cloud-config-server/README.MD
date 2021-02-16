@@ -4,7 +4,10 @@
 1. [Features](#features)
 1. [Instructions](#instructions)
     1. [Setup](#setup)
+      1. [Repository](#repository)
+      1. [Environment variables](#environment-variables)
     1. [Build and Run](#build-and-run)
+    1. [Docker](#docker)
 1. [Actuator](#actuator)
 1. [Configurations](#configurations)
 1. [Additional Information](#additional-information)
@@ -20,8 +23,8 @@
 
 ## Instructions
 ### Setup
-After cloning the repository:
-1. Change to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine, and initialise the configuration repository. On Windows run
+#### Repository
+Change to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine, and initialise the configuration repository. On Windows run
 
    ```
    > setup.bat
@@ -31,18 +34,28 @@ After cloning the repository:
    $ setup.sh
    ```
 
-2. Update `application.properties` to point to the local repository.
-    - Save a copy of the file [application.properties.sample](src/main/resources/application.properties.sample)
-      as `application.properties`.
-    - Replace the `<uri to repository>` with the path to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine.
-      On a Windows machine, the path will take the form
+#### Environment variables
+Set the following environment variables
+- **SERVICE_URL_DEFAULT_ZONE** - [default Eureka service URL](https://cloud.spring.io/spring-cloud-netflix/multi/multi__service_discovery_eureka_clients.html) for clients
 
-        ```
-        file:///C:/path/to/project/microservices/git-localconfig-repo
-        ```
-        See [Spring Cloud Config Server](https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_spring_cloud_config_server)
-      for more information.
+  E.g. `SERVICE_URL_DEFAULT_ZONE=http://localhost:8761/eureka` will connect to a local Eureka server running on the default port.
 
+  See [Eureka default zone setting is not picked up when using environment variables](https://github.com/spring-cloud/spring-cloud-netflix/issues/2541) for additional information.
+
+- **API_GATEWAY_URL** - url of [API gateway](https://cloud.spring.io/spring-cloud-gateway/reference/html/)
+
+  E.g. `API_GATEWAY_URL=http://localhost:8765/` will connect to a local API gateway server running on port 8765.
+
+- **CONFIG_GIT_URI** - uri of the git repository of configurations
+
+  E.g. `CONFIG_GIT_URI=file:///C:/path/to/project/git-localconfig-repo` will connect to a local repository on a Windows machine.
+  
+  *On Windows, you need an extra "/" in the file URL if it is absolute with a drive prefix*.
+  See [Spring Cloud Config Server](https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_spring_cloud_config_server)
+  for more information.
+
+
+**Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variable for a localhost default environment.
 
 ### Build and Run
 Open a terminal in the `spring-cloud-config-server` folder and run
@@ -56,6 +69,13 @@ or on Windows run
 > run.cmd
 ```
 Alternatively, build and run via an IDE.
+
+### Docker
+To build a docker image, open a terminal in the `spring-cloud-config-server` folder and run
+```
+> dockerbuild.cmd
+```
+Or alternatively run the maven `spring-boot:build-image` goal in an IDE.
 
 ## Actuator
 http://localhost:8888/actuator
