@@ -35,7 +35,7 @@ goto error
 :init
 
 @REM run
-"%JAVA_HOME%\bin\java.exe" -jar target/currency-exchange-service-0.0.1-SNAPSHOT.jar %*
+"%JAVA_HOME%\bin\java.exe" -jar target/currency-exchange-service-0.0.1-SNAPSHOT-K.jar %*
 goto end
 
 :error

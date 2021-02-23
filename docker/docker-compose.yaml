@@ -34,7 +34,7 @@
 
 services:
   currency-conversion:
-    image: ibuttimer/ccm-currency-conversion-service:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-currency-conversion-service:0.0.1-SNAPSHOT-K
     deploy:
       resources:
         limits:
@@ -42,128 +42,22 @@ services:
     ports:
       - "8100:8100"
     environment:
-      MYSQL_CONVERSION_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_conversion
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
-      API_GATEWAY_URL: http://api-gateway:8765/
-      CURRENCY_EXCHANGE_URL: http://api-gateway:8765/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      CURRENCY_EXCHANGE_URL: http://currency-exchange:8000/
     networks:
       - currency-network
     depends_on:
-      - naming-server
-      - spring-cloud-config-server
-      - rabbitmq
+      - currency-exchange
 
   currency-exchange:
-    image: ibuttimer/ccm-currency-exchange-service:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-currency-exchange-service:0.0.1-SNAPSHOT-K
     deploy:
       resources:
         limits:
           memory: 1G
     ports:
       - "8000:8000"
-    environment:
-      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_exchange
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
-      API_GATEWAY_URL: http://api-gateway:8765/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit
     networks:
       - currency-network
-    depends_on:
-      - naming-server
-      - spring-cloud-config-server
-      - rabbitmq
-
-  naming-server:
-    image: ibuttimer/ccm-naming-server:0.0.1-SNAPSHOT
-    deploy:
-      resources:
-        limits:
-          memory: 700M
-    ports:
-      - "8761:8761"
-    networks:
-      - currency-network
-
-  spring-cloud-config-server:
-    image: ibuttimer/ccm-spring-cloud-config-server:0.0.1-SNAPSHOT
-    deploy:
-      resources:
-        limits:
-          memory: 700M
-    ports:
-      - "8888:8888"
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      CONFIG_GIT_URI: file://git-localconfig-repo
-    networks:
-      - currency-network
-    volumes:
-      # map default project repository
-      - ../git-localconfig-repo:/git-localconfig-repo
-    depends_on:
-      - naming-server
-
-  api-gateway:
-    image: ibuttimer/ccm-api-gateway:0.0.1-SNAPSHOT
-    deploy:
-      resources:
-        limits:
-          memory: 700M
-    ports:
-      - "8765:8765"
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_ZIPKIN_SENDER_TYPE: rabbit
-    networks:
-      - currency-network
-    depends_on:
-      - naming-server
-      - rabbitmq
-
-  zipkin-server:
-    image: openzipkin/zipkin
-    deploy:
-      resources:
-        limits:
-          memory: 300M
-    ports:
-      - "9411:9411"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - currency-network
-    environment:
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
-
-  rabbitmq:
-    image: rabbitmq:3.8.11-management
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-    ports:
-      - "5672:5672"     # AMQP connections
-      - "15672:15672"   # management port
-    networks:
-      - currency-network
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
 networks:
   currency-network:

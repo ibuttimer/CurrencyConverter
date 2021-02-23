@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Class representing the response of the actuator/info endpoint
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

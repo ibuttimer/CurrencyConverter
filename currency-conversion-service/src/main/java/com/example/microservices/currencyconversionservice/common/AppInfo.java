@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Class representing the app info portion of the response of the actuator/info endpoint
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

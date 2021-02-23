@@ -47,7 +47,7 @@ public class CurrencyConversionService {
     private final RestTemplate restTemplate;
 
     public CurrencyConversionService(RestTemplateBuilder restTemplateBuilder,
-                                     @Value("${currency.exchange.host}:") String exchangeHost
+                                     @Value("${currency.exchange.host:http://localhost:8000}") String exchangeHost
     ) {
         this.restTemplate = restTemplateBuilder.build();
         this.url = UriComponentsBuilder

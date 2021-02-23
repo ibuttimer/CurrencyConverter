@@ -2,11 +2,10 @@ package com.example.microservices.currencyconversionservice.controller;
 
 import com.example.microservices.currencyconversionservice.CurrencyConversionServiceApplication;
 import com.example.microservices.currencyconversionservice.common.ActuatorInfo;
+import com.example.microservices.currencyconversionservice.common.Flavour;
 import com.example.microservices.currencyconversionservice.common.Profiles;
 import com.example.microservices.currencyconversionservice.model.ExchangeRateSource;
 import com.example.microservices.currencyconversionservice.service.CurrencyConversionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.hamcrest.number.BigDecimalCloseTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,9 +23,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -69,13 +71,14 @@ class CurrencyConversionControllerTest {
     @Value("${currency-conversion.api-gateway}")
     private String apiGateway;
 
+    @Value("${app.flavour}")
+    private String appFlavour;
+
     static List<Profiles> testProfiles = List.of(
             Profiles.DEV, Profiles.UNIT_TEST,
             Profiles.QA, Profiles.INTEGRATION);
 
     static List<String> testApps = List.of(
-            API_GATEWAY_APP_NAME,
-            CONFIG_SERVER_APP_NAME,
             CURRENCY_EXCHANGE_APP_NAME
     );
 
@@ -140,8 +143,13 @@ class CurrencyConversionControllerTest {
     }
 
     private ResponseEntity<ActuatorInfo> getActuatorInfo(String url) {
-         return testRestTemplate.getForEntity(url, ActuatorInfo.class);
-
+        ResponseEntity<ActuatorInfo> actuatorInfo = null;
+        try {
+            actuatorInfo = testRestTemplate.getForEntity(url, ActuatorInfo.class);
+        } catch (RestClientException e) {
+            fail("Unable to retrieve Actuator Info", e);
+        }
+        return actuatorInfo;
     }
 
     static class GetActuatorInfoCallable implements Callable<Boolean> {
@@ -223,9 +231,48 @@ class CurrencyConversionControllerTest {
      * @return
      */
     private Optional<ServiceInstance> getServiceInstance(String serviceName) {
-        return discoveryClient.getInstances(serviceName).stream()
-                .filter(s -> s.getServiceId().equalsIgnoreCase(serviceName))
-                .findFirst();
+        Optional<ServiceInstance> result;
+        if (Flavour.KUBERNETES.is(appFlavour)) {
+            UriComponents uriComponents = UriComponentsBuilder.fromUriString(apiGateway).build();
+            // generate fake ServiceInstance based on apiGateway
+            result = Optional.of(new ServiceInstance() {
+                @Override
+                public String getServiceId() {
+                    return serviceName;
+                }
+
+                @Override
+                public String getHost() {
+                    return uriComponents.getHost();
+                }
+
+                @Override
+                public int getPort() {
+                    return uriComponents.getPort();
+                }
+
+                @Override
+                public boolean isSecure() {
+                    assert uriComponents.getScheme() != null;
+                    return uriComponents.getScheme().equalsIgnoreCase("https");
+                }
+
+                @Override
+                public URI getUri() {
+                    return uriComponents.toUri();
+                }
+
+                @Override
+                public Map<String, String> getMetadata() {
+                    return Map.of();
+                }
+            });
+        } else {
+            result = discoveryClient.getInstances(serviceName).stream()
+                    .filter(s -> s.getServiceId().equalsIgnoreCase(serviceName))
+                    .findFirst();
+        }
+        return result;
     }
 
 }

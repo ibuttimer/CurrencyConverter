@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import static com.example.microservices.currencyconversionservice.common.UrlConfig.*;
 
-@FeignClient(name = CURRENCY_EXCHANGE_APP_NAME)  // client-side load balancing, when url not specified & registered with eureka server
+/* Kubernetes automatically created environment variables; e.g. CURRENCY_EXCHANGE_SERVICE_HOST is set for the 'currency-exchange' service
+    but the 'currency-exchange' service has to be running first
+@FeignClient(name = CURRENCY_EXCHANGE_APP_NAME, url = "${CURRENCY_EXCHANGE_SERVICE_HOST:http://localhost}:8000")
+ */
+@FeignClient(name = CURRENCY_EXCHANGE_APP_NAME, url = "${CURRENCY_EXCHANGE_URL:http://localhost:8000}")
 public interface CurrencyConversionProxy {
 
     @GetMapping(EXCHANGE_URL)
