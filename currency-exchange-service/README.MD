@@ -69,12 +69,12 @@ Set the following environment variables
 
 ### Build and Run
 Open a terminal in the `currency-exchange-service` folder and run
-```
+```shell
 $ mvn clean package
 $ java -jar target/currency-exchange-service-0.0.1-SNAPSHOT.jar
 ```
 or on Windows run
-```
+```shell
 > build.cmd
 > run.cmd
 ```
@@ -82,7 +82,7 @@ Alternatively, build and run via an IDE.
 
 ### Docker
 To build a docker image, open a terminal in the `currency-exchange-service` folder and run
-```
+```shell
 > dockerbuild.cmd
 ```
 Or alternatively run the maven `spring-boot:build-image` goal in an IDE.

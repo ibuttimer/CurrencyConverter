@@ -33,7 +33,6 @@ goto error
 @REM ==== END VALIDATION ====
 
 :init
-call clr-localdev-env.bat
 
 @REM build docker image
 mvnw.cmd spring-boot:build-image %*

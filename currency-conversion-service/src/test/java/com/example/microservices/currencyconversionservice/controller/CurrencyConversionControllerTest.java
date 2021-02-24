@@ -5,8 +5,6 @@ import com.example.microservices.currencyconversionservice.common.ActuatorInfo;
 import com.example.microservices.currencyconversionservice.common.Profiles;
 import com.example.microservices.currencyconversionservice.model.ExchangeRateSource;
 import com.example.microservices.currencyconversionservice.service.CurrencyConversionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.hamcrest.number.BigDecimalCloseTo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
@@ -140,8 +139,13 @@ class CurrencyConversionControllerTest {
     }
 
     private ResponseEntity<ActuatorInfo> getActuatorInfo(String url) {
-         return testRestTemplate.getForEntity(url, ActuatorInfo.class);
-
+        ResponseEntity<ActuatorInfo> actuatorInfo = null;
+        try {
+            actuatorInfo = testRestTemplate.getForEntity(url, ActuatorInfo.class);
+        } catch (RestClientException e) {
+            fail("Unable to retrieve Actuator Info", e);
+        }
+        return actuatorInfo;
     }
 
     static class GetActuatorInfoCallable implements Callable<Boolean> {

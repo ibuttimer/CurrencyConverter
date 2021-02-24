@@ -2,6 +2,7 @@ package com.example.microservices.currencyexchangeservice.service;
 
 import com.example.microservices.currencyexchangeservice.model.ExchangeRateSource;
 import com.example.microservices.currencyexchangeservice.repository.ExchangeRateSourceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -9,11 +10,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-
+@Slf4j
 @PropertySource("classpath:api-keys.properties")
 @Service
 public class ExchangeRateSourceService {
@@ -35,9 +37,16 @@ public class ExchangeRateSourceService {
 
     private Optional<ExchangeRateSource> getLatestRates() {
         Optional<ExchangeRateSource> result = Optional.empty();
-        ResponseEntity<ExchangeRateSource> response = this.restTemplate.getForEntity(url, ExchangeRateSource.class);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            result = Optional.ofNullable(response.getBody());
+        try {
+            ResponseEntity<ExchangeRateSource> response = this.restTemplate.getForEntity(url, ExchangeRateSource.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                result = Optional.ofNullable(response.getBody());
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            log.info("getLatestRates: " + result.isPresent());
         }
         return result;
     }

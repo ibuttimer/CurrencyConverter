@@ -26,11 +26,11 @@
 #### Repository
 Change to the [git-localconfig-repo](../git-localconfig-repo) folder on the local machine, and initialise the configuration repository. On Windows run
 
-   ```
+   ```shell
    > setup.bat
    ```
    or on linux
-   ```
+   ```shell
    $ setup.sh
    ```
 
@@ -59,12 +59,12 @@ Set the following environment variables
 
 ### Build and Run
 Open a terminal in the `spring-cloud-config-server` folder and run
-```
+```shell
 $ mvn clean package
 $ java -jar target/spring-cloud-config-server-0.0.1-SNAPSHOT.jar
 ```
 or on Windows run
-```
+```shell
 > build.cmd
 > run.cmd
 ```
@@ -72,7 +72,7 @@ Alternatively, build and run via an IDE.
 
 ### Docker
 To build a docker image, open a terminal in the `spring-cloud-config-server` folder and run
-```
+```shell
 > dockerbuild.cmd
 ```
 Or alternatively run the maven `spring-boot:build-image` goal in an IDE.

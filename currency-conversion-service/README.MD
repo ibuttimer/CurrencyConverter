@@ -82,31 +82,31 @@ The application may be built and run via an IDE or terminal commands.
     
        E.g. the [Java VM options](https://docs.oracle.com/javase/8/docs/platform/jvmti/jvmti.html#tooloptions) may be set in Windows using 
      
-       ```
+       ```shell
        set JAVA_TOOL_OPTIONS=-Dspring.profiles.active=dev -Dspring.cloud.config.profile=dev
        ```
 #### Build
 Open a terminal in the `currency-conversion-service` folder and run
-```
+```shell
 $ mvn clean package
 ```
 or on Windows run
-```
+```shell
 > build.cmd
 ```
 #### Run
 Open a terminal in the `currency-conversion-service` folder and run
-```
+```shell
 $ java -jar target/currency-conversion-service-0.0.1-SNAPSHOT.jar
 ```
 or on Windows run
-```
+```shell
 > run.cmd
 ```
 
 ### Docker
 To build a docker image, open a terminal in the `currency-conversion-service` folder and run
-```
+```shell
 > dockerbuild.cmd
 ```
 Or alternatively run the maven `spring-boot:build-image` goal in an IDE.

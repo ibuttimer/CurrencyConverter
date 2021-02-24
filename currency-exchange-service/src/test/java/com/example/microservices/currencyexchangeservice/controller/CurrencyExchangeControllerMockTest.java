@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import static com.example.microservices.currencyexchangeservice.common.Currency.CURRENCIES;
@@ -40,6 +42,13 @@ class CurrencyExchangeControllerMockTest {
     @DisplayName("Get exchange rate")
     @Test
     public void getExchangeRate() throws Exception {
+        String host;
+        try {
+            host = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            host = "unknown";
+        }
+        final String hostEnvironment = host + ":null:@project.version@";
         final String environment = "test";
         final Long transactionTimestamp = nowTimestamp();
         final Long rateTimestamp = transactionTimestamp - 60;
@@ -59,7 +68,7 @@ class CurrencyExchangeControllerMockTest {
                         .build();
 
                 Mockito.when(exchangeRateService
-                        .getExchangeRate(BASE_CURRENCY, entry.getKey(), null))
+                        .getExchangeRate(BASE_CURRENCY, entry.getKey(), hostEnvironment))
                             .thenReturn(rate);
 
                 mvc.perform(
@@ -76,7 +85,7 @@ class CurrencyExchangeControllerMockTest {
                         .andExpect(jsonPath("$.environment").value(environment));
 
                 verify(exchangeRateService, times(1))
-                        .getExchangeRate(BASE_CURRENCY, entry.getKey(), null);
+                        .getExchangeRate(BASE_CURRENCY, entry.getKey(), hostEnvironment);
                 verifyNoMoreInteractions(exchangeRateService);
             }
         }

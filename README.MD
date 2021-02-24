@@ -4,6 +4,9 @@ A microservice based application providing currency conversion,
 based on the core concepts from the [Master Microservices with Spring Boot and Spring Cloud](https://www.udemy.com/course/microservices-with-spring-boot-and-spring-cloud/)
 course on [Udemy](https://www.udemy.com/).
 
+This is the main branch of the application. It utilises [Docker](https://www.docker.com/) to run the microservices. 
+For the equivalent functionality for a [Kubernetes](https://kubernetes.io/) environment, please see the [kubernetes branch](https://github.com/ibuttimer/CurrencyConverter/tree/kubernetes).
+
 # Table of Contents
 1. [Services](#services)
     1. [Naming server](#naming-server)
@@ -83,7 +86,7 @@ To run all microservices:
 
 | Service | URL | Credentias |
 |---------|-----|------------|
-| Eureka | http://localhost:15672/ | - |
+| Eureka | http://localhost:8761/ | - |
 | RabbitMQ | http://localhost:15672/ | guest/guest |
 | Zipkin | http://localhost:9411/ | - |
 | Currency exchange | See [Get exchange rate](currency-exchange-service/README.MD#get-exchange-rate) | - |
