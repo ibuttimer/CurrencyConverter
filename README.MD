@@ -10,18 +10,18 @@ For the equivalent functionality for a [Kubernetes](https://kubernetes.io/) envi
 # Table of Contents
 1. [Services](#services)
     1. [Naming server](#naming-server)
-    1. [Configuration server](#configuration-server)
-    1. [API Gateway server](#api-gateway-server)
-    1. [Currency Exchange Service](#currency-exchange-service)
-    1. [Currency Conversion Service](#currency-conversion-service)
-    1. [Tracing Service](#tracing-service)
-1. [Architecture Diagram](#architecture-diagram)
-1. [Setup and Build](#setup-and-build)
-1. [Docker](#docker)
+    2. [Configuration server](#configuration-server)
+    3. [API Gateway server](#api-gateway-server)
+    4. [Currency Exchange Service](#currency-exchange-service)
+    5. [Currency Conversion Service](#currency-conversion-service)
+    6. [Tracing Service](#tracing-service)
+2. [Architecture Diagram](#architecture-diagram)
+3. [Setup and Build](#setup-and-build)
+4. [Docker](#docker)
    1. [Build image](#build-image)
-   1. [Run](#run)
+   2. [Run](#run)
       1. [Windows](#windows)
-      1. [Service URLs](#service-urls)
+      2. [Service URLs](#service-urls)
 
 ## Services
 ### Naming server
@@ -84,10 +84,10 @@ To run all microservices:
 
 #### Service URLs
 
-| Service | URL | Credentias |
-|---------|-----|------------|
-| Eureka | http://localhost:8761/ | - |
-| RabbitMQ | http://localhost:15672/ | guest/guest |
-| Zipkin | http://localhost:9411/ | - |
-| Currency exchange | See [Get exchange rate](currency-exchange-service/README.MD#get-exchange-rate) | - |
-| Currency conversion | See [Currency conversion](currency-conversion-service/README.MD#currency-conversion) | - |
+| Service             | URL                                                                                  | Credentials |
+|---------------------|--------------------------------------------------------------------------------------|-------------|
+| Eureka              | http://localhost:8761/                                                               | -           |
+| RabbitMQ            | http://localhost:15672/                                                              | guest/guest |
+| Zipkin              | http://localhost:9411/                                                               | -           |
+| Currency exchange   | See [Get exchange rate](currency-exchange-service/README.MD#get-exchange-rate)       | -           |
+| Currency conversion | See [Currency conversion](currency-conversion-service/README.MD#currency-conversion) | -           |

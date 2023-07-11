@@ -2,13 +2,13 @@
 
 # Table of Contents
 1. [Features](#features)
-1. [Instructions](#instructions)
+2. [Instructions](#instructions)
     1. [Build and Run](#build-and-run)
-    1. [Docker](#docker)
-1. [Dashboard](#dashboard)
-1. [Additional Information](#additional-information)
+    2. [Docker](#docker)
+3. [Dashboard](#dashboard)
+4. [Additional Information](#additional-information)
     1. [Reference Documentation](#reference-documentation)
-    1. [Guides](#guides)
+    2. [Guides](#guides)
 
 ## Features
 

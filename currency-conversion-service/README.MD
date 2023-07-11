@@ -2,25 +2,26 @@
 
 # Table of Contents
 1. [Features](#features)
-1. [Instructions](#instructions)
+2. [Instructions](#instructions)
    1. [Setup](#setup)
        1. [MySQL database](#mysql-database)
-       1. [Environment variables](#environment-variables)
-   1. [Build, Test and Run](#build-test-and-run)
+       2. [Environment variables](#environment-variables)
+          1. [MySQL connection string](#mysql-connection-string)
+   2. [Build, Test and Run](#build-test-and-run)
         1. [Integration test prerequisites](#integration-test-prerequisites)
-        1. [Build](#build)
-        1. [Run](#run)
-   1. [Docker](#docker)
-1. [Actuator](#actuator)
-1. [OpenAPI Swagger UI](#openapi-swagger-ui)
+        2. [Build](#build)
+        3. [Run](#run)
+   3. [Docker](#docker)
+3. [Actuator](#actuator)
+4. [OpenAPI Swagger UI](#openapi-swagger-ui)
     1. [Currency conversion](#currency-conversion)
-1. [Additional Information](#additional-information)
+5. [Additional Information](#additional-information)
     1. [Reference Documentation](#reference-documentation)
-    1. [Guides](#guides)
+    2. [Guides](#guides)
 
 
 ## Features
-- Utilises exchange rates provided by the [Currency Exchange Service](currency-exchange-service/README.MD) to perform currency conversion.
+- Utilises exchange rates provided by the [Currency Exchange Service](../currency-exchange-service/README.MD) to perform currency conversion.
 - [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/)
 - [Spring Cloud LoadBalancer](https://docs.spring.io/spring-cloud-commons/docs/current/reference/html/#spring-cloud-loadbalancer)
 - Fault tolerance via [Resilience4j](https://github.com/resilience4j/resilience4j)
@@ -63,7 +64,13 @@ Set the following environment variables
 
   E.g. `MYSQL_CONVERSION_URL=//localhost:3306/currency_conversion` will connect to a local MySQL server running on the default port.
 
-**Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variable for a localhost default environment.
+##### MySQL connection string
+In the event that the operating system returns an ambiguous time zone value, e.g. `PDT` or `GMT Summer Time`,
+the JDBC connection will fail, as they refer to several possible time zones in the [IANA Time Zone Database](https://www.iana.org/time-zones).
+Appending a recognised time zone to the connection string resolves the issue. E.g. *//localhost:3306/currency_conversion?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC.*
+See [8.0.15 JDBC Driver can not work in DST time zone](https://bugs.mysql.com/bug.php?id=95036) for more details.
+
+**Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variables for a localhost default environment.
 
 
 ### Build, Test and Run
@@ -131,9 +138,9 @@ See [docs.openexchangerates.org](https://docs.openexchangerates.org/docs/support
 
 E.g. Convert $10.30 United States Dollar to Euro
 
-| Access | URL |
-|--------|-----|
-| Directly | http://localhost:8100/currency-conversion/from/USD/to/EUR/quantity/10.3 |
+| Access      | URL                                                                     |
+|-------------|-------------------------------------------------------------------------|
+| Directly    | http://localhost:8100/currency-conversion/from/USD/to/EUR/quantity/10.3 |
 | API Gateway | http://localhost:8765/currency-conversion/from/USD/to/EUR/quantity/10.3 |
 
 ```json

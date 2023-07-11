@@ -2,16 +2,16 @@
 
 # Table of Contents
 1. [Features](#features)
-1. [Instructions](#instructions)
+2. [Instructions](#instructions)
     1. [Setup](#setup)
-      1. [Environment variables](#environment-variables)
-    1. [Build and Run](#build-and-run)
-    1. [Docker](#docker)
-1. [Actuator](#actuator)
-1. [Service URLs](#service-urls)
-1. [Additional Information](#additional-information)
+       1. [Environment variables](#environment-variables)
+    2. [Build and Run](#build-and-run)
+    3. [Docker](#docker)
+3. [Actuator](#actuator)
+4. [Service URLs](#service-urls)
+5. [Additional Information](#additional-information)
    1. [Reference Documentation](#reference-documentation)
-   1. [Guides](#guides)
+   2. [Guides](#guides)
 
 ## Features
 
@@ -61,10 +61,10 @@ Or alternatively run the maven `spring-boot:build-image` goal in an IDE.
 http://localhost:8765/actuator
 
 ## Service URLs
-|Service|API Gateway|
-|-------|--------------------|
-|currency-exchange|http://localhost:8765/currency-exchange/from/usd/to/eur|
-|currency-conversion|http://localhost:8765/currency-conversion/from/usd/to/eur/quantity/10.3|
+| Service             | API Gateway                                                             |
+|---------------------|-------------------------------------------------------------------------|
+| currency-exchange   | http://localhost:8765/currency-exchange/from/usd/to/eur                 |
+| currency-conversion | http://localhost:8765/currency-conversion/from/usd/to/eur/quantity/10.3 |
 
 ## Additional Information
 

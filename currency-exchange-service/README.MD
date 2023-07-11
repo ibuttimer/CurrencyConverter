@@ -2,19 +2,20 @@
 
 # Table of Contents
 1. [Features](#features)
-1. [Instructions](#instructions)
+2. [Instructions](#instructions)
    1. [Setup](#setup)
       1. [API key](#api-key)
-      1. [MySQL database](#mysql-database)
-      1. [Environment variables](#environment-variables)
-   1. [Build and Run](#build-and-run)
-   1. [Docker](#docker)
-1. [Actuator](#actuator)
-1. [OpenAPI Swagger UI](#openapi-swagger-ui)
+      2. [MySQL database](#mysql-database)
+      3. [Environment variables](#environment-variables)
+         1. [MySQL connection string](#mysql-connection-string)
+   2. [Build and Run](#build-and-run)
+   3. [Docker](#docker)
+3. [Actuator](#actuator)
+4. [OpenAPI Swagger UI](#openapi-swagger-ui)
    1. [Get exchange rate](#get-exchange-rate)
-1. [Additional Information](#additional-information)
+5. [Additional Information](#additional-information)
     1. [Reference Documentation](#reference-documentation)
-    1. [Guides](#guides)
+    2. [Guides](#guides)
 
 ## Features
 - Utilises [Open Exchange Rates](https://openexchangerates.org/) to provide the latest currency exchange rates.
@@ -64,7 +65,13 @@ Set the following environment variables
 
   E.g. `MYSQL_EXCHANGE_URL=//localhost:3306/currency_exchange` will connect to a local MySQL server running on the default port.
 
-**Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variable for a localhost default environment.
+##### MySQL connection string
+In the event that the operating system returns an ambiguous time zone value, e.g. `PDT` or `GMT Summer Time`,
+the JDBC connection will fail, as they refer to several possible time zones in the [IANA Time Zone Database](https://www.iana.org/time-zones).
+Appending a recognised time zone to the connection string resolves the issue. E.g. *//localhost:3306/currency_exchange?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC.*
+See [8.0.15 JDBC Driver can not work in DST time zone](https://bugs.mysql.com/bug.php?id=95036) for more details.
+
+**Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variables for a localhost default environment.
 
 
 ### Build and Run
@@ -105,9 +112,9 @@ See [docs.openexchangerates.org](https://docs.openexchangerates.org/docs/support
 
 E.g. The United States Dollar/Euro rate
 
-| Access | URL |
-|--------|-----|
-| Directly | http://localhost:8000/currency-exchange/from/USD/to/EUR |
+| Access      | URL                                                     |
+|-------------|---------------------------------------------------------|
+| Directly    | http://localhost:8000/currency-exchange/from/USD/to/EUR |
 | API Gateway | http://localhost:8765/currency-exchange/from/USD/to/EUR |
 
 ```json
