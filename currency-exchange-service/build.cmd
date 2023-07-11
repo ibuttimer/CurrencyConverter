@@ -36,6 +36,9 @@ set
 
 @REM build jar
 mvnw.cmd clean package %*
+@REM If the build fails with a 'The forked VM terminated without saying properly goodbye. VM crash or System.exit called?'
+@REM from the maven-surefire-plugin, the issue may be excess logging. Try the following command, and view build.log for results.
+@REM mvnw.cmd clean package %* > build.log
 goto end
 
 :error
