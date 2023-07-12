@@ -9,6 +9,13 @@ IF /I "%PARENT%" == "pwsh" GOTO :ISPOWERSHELL
 endlocal
 
 rem Running in command prompt
+set NAMING_PORT=
+set CONFIG_PORT=
+set API_PORT=
+set ZIPKIN_PORT=
+set EXCHANGE_PORT=
+set CONVERT_PORT=
+
 set SERVICE_URL_DEFAULT_ZONE=
 set CONFIG_SERVER_URL=
 set API_GATEWAY_URL=

@@ -9,14 +9,21 @@ IF /I "%PARENT%" == "pwsh" GOTO :ISPOWERSHELL
 endlocal
 
 rem Running in command prompt
-set SERVICE_URL_DEFAULT_ZONE=http://localhost:8761/eureka
-set CONFIG_SERVER_URL=http://localhost:8888/
-set API_GATEWAY_URL=http://localhost:8765/
-set ZIPKIN_SERVER_URL=localhost:9411/
+set NAMING_PORT=8761
+set CONFIG_PORT=8888
+set API_PORT=8765
+set ZIPKIN_PORT=9411
+set EXCHANGE_PORT=8000
+set CONVERT_PORT=8100
+
+set SERVICE_URL_DEFAULT_ZONE=http://localhost:%NAMING_PORT%/eureka
+set CONFIG_SERVER_URL=http://localhost:%CONFIG_PORT%/
+set API_GATEWAY_URL=http://localhost:%API_PORT%/
+set ZIPKIN_SERVER_URL=localhost:%ZIPKIN_PORT%/
 
 setlocal enabledelayedexpansion
 for %%E IN (
-    SERVICE_URL_DEFAULT_ZONE, CONFIG_SERVER_URL, API_GATEWAY_URL, ZIPKIN_SERVER_URL
+    SERVICE_URL_DEFAULT_ZONE, CONFIG_SERVER_URL, API_GATEWAY_URL, ZIPKIN_SERVER_URL, EXCHANGE_PORT, CONVERT_PORT
  ) do (
   echo %%E: !%%E!
 )

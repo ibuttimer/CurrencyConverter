@@ -80,7 +80,7 @@ See the individual services for instructions:
 To run all microservices: 
 - Open Windows Powershell in the [docker](docker) folder.
 - Ensure Docker Desktop is running
-- Run `docker-compose up`
+- Run `docker compose up`
 
 #### Service URLs
 

@@ -3,7 +3,7 @@
 # NOTE: This configuration assumes docker-compose is being run from the project's 'docker' folder.
 # E.g.
 #  > cd C:\path\to\project\docker
-#  > docker-compose up
+#  > docker compose up
 
 # How to use the host's IP Address inside a Docker container
 # see https://dev.to/natterstefan/docker-tip-how-to-get-host-s-ip-address-inside-a-docker-container-5anh#:~:text=On%20Docker%20for%20Linux%2C%20the,you%20are%20using%20default%20networking.
@@ -14,6 +14,9 @@
 # 'automatic service discovery' in a user-defined network, allows containers to not only communicate by IP address,
 # but they can also resolve a container name to an IP address
 # https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks
+
+# See currency-exchange-service/README.MD#"MySQL connection string" for information
+# regarding the MySQL connection string
 
 #services:
 #  service-name:
@@ -35,22 +38,24 @@
 services:
   currency-conversion:
     image: ibuttimer/ccm-currency-conversion-service:0.0.1-SNAPSHOT
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 1G
     ports:
-      - "8100:8100"
+      - "${CONVERT_PORT}:${CONVERT_PORT}"
     environment:
-      MYSQL_CONVERSION_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_conversion
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
-      API_GATEWAY_URL: http://api-gateway:8765/
-      CURRENCY_EXCHANGE_URL: http://api-gateway:8765/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      MYSQL_CONVERSION_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:${MYSQL_PORT}/currency_conversion?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
+      CONFIG_SERVER_URL: http://spring-cloud-config-server:${CONFIG_PORT}/
+      API_GATEWAY_URL: http://api-gateway:${API_PORT}/
+      CURRENCY_EXCHANGE_URL: http://api-gateway:${API_PORT}/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      TRACING_ENABLED: "true"
     networks:
       - currency-network
     depends_on:
@@ -60,21 +65,23 @@ services:
 
   currency-exchange:
     image: ibuttimer/ccm-currency-exchange-service:0.0.1-SNAPSHOT
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 1G
     ports:
-      - "8000:8000"
+      - "${EXCHANGE_PORT}:${EXCHANGE_PORT}"
     environment:
-      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:3306/currency_exchange
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      CONFIG_SERVER_URL: http://spring-cloud-config-server:8888/
-      API_GATEWAY_URL: http://api-gateway:8765/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:${MYSQL_PORT}/currency_exchange?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
+      CONFIG_SERVER_URL: http://spring-cloud-config-server:${CONFIG_PORT}/
+      API_GATEWAY_URL: http://api-gateway:${API_PORT}/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      TRACING_ENABLED: "true"
     networks:
       - currency-network
     depends_on:
@@ -84,25 +91,27 @@ services:
 
   naming-server:
     image: ibuttimer/ccm-naming-server:0.0.1-SNAPSHOT
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 700M
     ports:
-      - "8761:8761"
+      - "${NAMING_PORT}:${NAMING_PORT}"
     networks:
       - currency-network
 
   spring-cloud-config-server:
     image: ibuttimer/ccm-spring-cloud-config-server:0.0.1-SNAPSHOT
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 700M
     ports:
-      - "8888:8888"
+      - "${CONFIG_PORT}:${CONFIG_PORT}"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
       CONFIG_GIT_URI: file://git-localconfig-repo
     networks:
       - currency-network
@@ -114,18 +123,20 @@ services:
 
   api-gateway:
     image: ibuttimer/ccm-api-gateway:0.0.1-SNAPSHOT
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 700M
     ports:
-      - "8765:8765"
+      - "${API_PORT}:${API_PORT}"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      TRACING_ENABLED: "true"
     networks:
       - currency-network
     depends_on:
@@ -134,29 +145,31 @@ services:
 
   zipkin-server:
     image: openzipkin/zipkin
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 300M
     ports:
-      - "9411:9411"
+      - "${ZIPKIN_PORT}:${ZIPKIN_PORT}"
     depends_on:
       rabbitmq:
         condition: service_healthy
     networks:
       - currency-network
     environment:
-      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
 
   rabbitmq:
     image: rabbitmq:3.8.11-management
+    env_file: .env
     deploy:
       resources:
         limits:
           memory: 500M
     ports:
-      - "5672:5672"     # AMQP connections
-      - "15672:15672"   # management port
+      - "${RABBIT_PORT}:${RABBIT_PORT}"           # AMQP connections
+      - "${RABBIT_MGMT_PORT}:${RABBIT_MGMT_PORT}" # management port
     networks:
       - currency-network
     healthcheck:
