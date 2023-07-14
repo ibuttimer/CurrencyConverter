@@ -2,7 +2,7 @@
 # this script configures the local git repository for use by the Configuration Server
 
 # initialise the repository
-git init
+git init -b main
 
 # add all files
 git add -A

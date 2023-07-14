@@ -1,7 +1,7 @@
 rem this script configures the local git repository for use by the Configuration Server
 
 rem initialise the repository
-git init
+git init -b main
 
 rem add all files
 git add -A
