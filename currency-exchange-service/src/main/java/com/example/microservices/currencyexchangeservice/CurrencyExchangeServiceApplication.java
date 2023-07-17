@@ -1,6 +1,7 @@
 package com.example.microservices.currencyexchangeservice;
 
 import com.example.microservices.currencyexchangeservice.common.Profiles;
+import com.example.microservices.currencyexchangeservice.config.LoggingListener;
 import com.example.microservices.currencyexchangeservice.service.ExchangeRateSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,9 @@ public class CurrencyExchangeServiceApplication {
 
 
 	public static void main(String[] args) {
-		SpringApplication.run(CurrencyExchangeServiceApplication.class, args);
+		SpringApplication app = new SpringApplication(CurrencyExchangeServiceApplication.class);
+ 		app.addListeners(new LoggingListener());
+ 		app.run(args);
 	}
 
 	@Bean
@@ -46,7 +49,7 @@ public class CurrencyExchangeServiceApplication {
 
 	@Bean
 	CommandLineRunner configLogger(@Value("${currency-exchange.rate-scale}") String rateScale,
-											 @Value("${spring.datasource.platform}") String dbPlatform,
+											 @Value("${spring.sql.init.platform}") String dbPlatform,
 											 @Value("${spring.datasource.url}") String dbUrl) {
 		return args -> {
 			logger.info("rate-scale: {}", rateScale);
@@ -61,8 +64,6 @@ public class CurrencyExchangeServiceApplication {
 			havingValue = "true",
 			matchIfMissing = true)
 	CommandLineRunner initExchangeRateSource(ExchangeRateSourceService service) {
-		return args -> {
-			service.updateRates();
-		};
+		return args -> service.updateRates();
 	}
 }

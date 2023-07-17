@@ -59,7 +59,7 @@ Set the following environment variables
 
 - **ZIPKIN_SERVER_URL** - url of [Zipkin server](https://docs.spring.io/spring-cloud-sleuth/docs/current-SNAPSHOT/reference/html/index.html)
 
-  E.g. `ZIPKIN_SERVER_URL=localhost:9411/` will connect to a local Spring Cloud Sleuth server running on the default port.
+  E.g. `ZIPKIN_SERVER_URL=http://localhost:9411/api/v2/spans` will connect to a local Spring Cloud Sleuth server running on the default port.
 
 - **MYSQL_EXCHANGE_URL** - the [hosts](https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html) element of the MySQL JDBC connection
 
@@ -78,7 +78,7 @@ See [8.0.15 JDBC Driver can not work in DST time zone](https://bugs.mysql.com/bu
 Open a terminal in the `currency-exchange-service` folder and run
 ```shell
 $ mvn clean package
-$ java -jar target/currency-exchange-service-0.0.1-SNAPSHOT.jar
+$ java -jar target/currency-exchange-service-0.0.2-SNAPSHOT.jar
 ```
 or on Windows run
 ```shell

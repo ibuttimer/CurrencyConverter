@@ -32,7 +32,7 @@ Set the following environment variables
 
 - **ZIPKIN_SERVER_URL** - url of [Zipkin server](https://docs.spring.io/spring-cloud-sleuth/docs/current-SNAPSHOT/reference/html/index.html)
 
-  E.g. `ZIPKIN_SERVER_URL=localhost:9411/` will connect to a local Spring Cloud Sleuth server running on the default port.
+  E.g. `ZIPKIN_SERVER_URL=http://localhost:9411/api/v2/spans` will connect to a local Spring Cloud Sleuth server running on the default port.
 
 **Note:** [set-localdev-env.bat](set-localdev-env.bat) will set these variable for a localhost default environment.
 
@@ -41,7 +41,7 @@ Set the following environment variables
 Open a terminal in the `api-gateway` folder and run
 ```shell
 $ mvn clean package
-$ java -jar target/api-gateway-0.0.1-SNAPSHOT.jar
+$ java -jar target/api-gateway-0.0.2-SNAPSHOT.jar
 ```
 or on Windows run
 ```shell

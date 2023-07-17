@@ -61,7 +61,7 @@ Set the following environment variables
 Open a terminal in the `spring-cloud-config-server` folder and run
 ```shell
 $ mvn clean package
-$ java -jar target/spring-cloud-config-server-0.0.1-SNAPSHOT.jar
+$ java -jar target/spring-cloud-config-server-0.0.2-SNAPSHOT.jar
 ```
 or on Windows run
 ```shell

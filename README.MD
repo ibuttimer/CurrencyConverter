@@ -53,7 +53,17 @@ See [currency-conversion-service](currency-conversion-service/README.MD) for mor
 - [Currency conversion example](currency-conversion-service/README.MD#currency-conversion)
 
 ### Tracing Service
-Distributed tracing is provided utilising [Spring Cloud Sleuth](https://spring.io/projects/spring-cloud-sleuth) with [Zipkin](https://hub.docker.com/r/openzipkin/zipkin) and [RabbitMQ](https://hub.docker.com/_/rabbitmq) Docker containers.
+Distributed tracing is provided utilising [Micrometer Tracing](https://micrometer.io/docs/tracing) with [Zipkin](https://hub.docker.com/r/openzipkin/zipkin) and [RabbitMQ](https://hub.docker.com/_/rabbitmq) Docker containers.
+
+#### Tracing Docker Images
+There are Docker images available for the [RabbitMQ](https://www.rabbitmq.com/download.html) and [Zipkin](https://zipkin.io/pages/quickstart.html) servers.
+
+```shell
+# latest RabbitMQ 3.12
+> docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management
+
+> docker run -d -p 9411:9411 openzipkin/zipkin
+```
 
 ## Architecture Diagram
 ![Architecture Diagram](misc/microservices.jpg)

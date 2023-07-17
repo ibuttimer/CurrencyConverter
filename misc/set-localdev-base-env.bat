@@ -19,7 +19,7 @@ set CONVERT_PORT=8100
 set SERVICE_URL_DEFAULT_ZONE=http://localhost:%NAMING_PORT%/eureka
 set CONFIG_SERVER_URL=http://localhost:%CONFIG_PORT%/
 set API_GATEWAY_URL=http://localhost:%API_PORT%/
-set ZIPKIN_SERVER_URL=localhost:%ZIPKIN_PORT%/
+set ZIPKIN_SERVER_URL=http://localhost:%ZIPKIN_PORT%/api/v2/spans
 
 setlocal enabledelayedexpansion
 for %%E IN (

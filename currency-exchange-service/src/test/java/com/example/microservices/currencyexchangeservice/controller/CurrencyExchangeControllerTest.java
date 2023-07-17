@@ -6,9 +6,6 @@ import com.example.microservices.currencyexchangeservice.repository.ExchangeRate
 import com.example.microservices.currencyexchangeservice.repository.ExchangeRateSourceRepository;
 import com.example.microservices.currencyexchangeservice.service.ExchangeRateService;
 import com.example.microservices.currencyexchangeservice.service.ExchangeRateSourceService;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.number.BigDecimalCloseTo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

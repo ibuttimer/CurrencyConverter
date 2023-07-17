@@ -1,4 +1,4 @@
-package com.example.microservices.currencyconversionservice.config;
+package com.example.microservices.springcloudconfigserver.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

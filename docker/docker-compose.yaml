@@ -37,7 +37,7 @@
 
 services:
   currency-conversion:
-    image: ibuttimer/ccm-currency-conversion-service:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-currency-conversion-service:0.0.2-SNAPSHOT
     env_file: .env
     deploy:
       resources:
@@ -51,7 +51,7 @@ services:
       CONFIG_SERVER_URL: http://spring-cloud-config-server:${CONFIG_PORT}/
       API_GATEWAY_URL: http://api-gateway:${API_PORT}/
       CURRENCY_EXCHANGE_URL: http://api-gateway:${API_PORT}/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      ZIPKIN_SERVER_URL: http://zipkin-server:${ZIPKIN_PORT}/api/v2/spans
       RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
@@ -64,7 +64,7 @@ services:
       - rabbitmq
 
   currency-exchange:
-    image: ibuttimer/ccm-currency-exchange-service:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-currency-exchange-service:0.0.2-SNAPSHOT
     env_file: .env
     deploy:
       resources:
@@ -73,11 +73,11 @@ services:
     ports:
       - "${EXCHANGE_PORT}:${EXCHANGE_PORT}"
     environment:
-      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:${MYSQL_PORT}/currency_exchange?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      MYSQL_EXCHANGE_URL: //${DOCKER_GATEWAY_HOST:-host.docker.internal}:${MYSQL_PORT}/currency_exchange?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Dublin
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
       CONFIG_SERVER_URL: http://spring-cloud-config-server:${CONFIG_PORT}/
       API_GATEWAY_URL: http://api-gateway:${API_PORT}/
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      ZIPKIN_SERVER_URL: http://zipkin-server:${ZIPKIN_PORT}/api/v2/spans
       RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
@@ -90,7 +90,7 @@ services:
       - rabbitmq
 
   naming-server:
-    image: ibuttimer/ccm-naming-server:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-naming-server:0.0.2-SNAPSHOT
     env_file: .env
     deploy:
       resources:
@@ -102,7 +102,7 @@ services:
       - currency-network
 
   spring-cloud-config-server:
-    image: ibuttimer/ccm-spring-cloud-config-server:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-spring-cloud-config-server:0.0.2-SNAPSHOT
     env_file: .env
     deploy:
       resources:
@@ -122,7 +122,7 @@ services:
       - naming-server
 
   api-gateway:
-    image: ibuttimer/ccm-api-gateway:0.0.1-SNAPSHOT
+    image: ibuttimer/ccm-api-gateway:0.0.2-SNAPSHOT
     env_file: .env
     deploy:
       resources:
@@ -132,7 +132,7 @@ services:
       - "${API_PORT}:${API_PORT}"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:${NAMING_PORT}/eureka
-      SPRING_ZIPKIN_BASEURL: http://zipkin-server:${ZIPKIN_PORT}/
+      ZIPKIN_SERVER_URL: http://zipkin-server:${ZIPKIN_PORT}/api/v2/spans
       RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_ZIPKIN_SENDER_TYPE: rabbit
@@ -161,7 +161,7 @@ services:
       RABBIT_URI: amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@rabbitmq:${RABBIT_PORT}
 
   rabbitmq:
-    image: rabbitmq:3.8.11-management
+    image: rabbitmq:3.12-management
     env_file: .env
     deploy:
       resources:

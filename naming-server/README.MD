@@ -19,7 +19,7 @@
 Open a terminal in the `naming-server` folder and run
 ```shell
 $ mvn clean package
-$ java -jar target/naming-server-0.0.1-SNAPSHOT.jar
+$ java -jar target/naming-server-0.0.2-SNAPSHOT.jar
 ```
 or on Windows run
 ```shell

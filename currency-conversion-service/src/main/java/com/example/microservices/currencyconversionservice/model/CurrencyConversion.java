@@ -1,14 +1,17 @@
 package com.example.microservices.currencyconversionservice.model;
 
+import jakarta.persistence.Entity;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
-import javax.persistence.Entity;
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 public class CurrencyConversion extends ExchangeRate {
 
@@ -36,4 +39,16 @@ public class CurrencyConversion extends ExchangeRate {
                 .environment(exchangeRate.getEnvironment())
                 .build();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        CurrencyConversion that = (CurrencyConversion) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
 }

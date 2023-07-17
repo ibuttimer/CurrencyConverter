@@ -1,5 +1,6 @@
 package com.example.microservices.apigateway;
 
+import com.example.microservices.apigateway.config.LoggingListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiGatewayApplication.class, args);
+		SpringApplication app = new SpringApplication(ApiGatewayApplication.class);
+		app.addListeners(new LoggingListener());
+		app.run(args);
 	}
 
 }

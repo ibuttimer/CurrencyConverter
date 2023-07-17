@@ -1,7 +1,4 @@
-package com.example.microservices.apigateway.config;
-
-import java.util.Arrays;
-import java.util.stream.StreamSupport;
+package com.example.microservices.namingserver.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +9,9 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.stream.StreamSupport;
 
 /**
  * Log all configuration properties on application startup

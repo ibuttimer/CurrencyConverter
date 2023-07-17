@@ -1,7 +1,7 @@
 package com.example.microservices.apigateway.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -13,6 +13,6 @@ import org.springframework.context.annotation.Configuration;
                 "eureka.client.enabled"},
         matchIfMissing = true
 )
-@EnableEurekaClient
+@EnableDiscoveryClient
 public class EurekaConfig {
 }

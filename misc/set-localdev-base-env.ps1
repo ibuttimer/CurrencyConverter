@@ -9,7 +9,7 @@ $env:CONVERT_PORT=8100
 $env:SERVICE_URL_DEFAULT_ZONE='http://localhost:'+$env:NAMING_PORT+'/eureka'
 $env:CONFIG_SERVER_URL='http://localhost:'+$env:CONFIG_PORT+'/'
 $env:API_GATEWAY_URL='http://localhost:'+$env:API_PORT+'/'
-$env:ZIPKIN_SERVER_URL='localhost:'+$env:ZIPKIN_PORT+'/'
+$env:ZIPKIN_SERVER_URL='http://localhost:'+$env:ZIPKIN_PORT+'/api/v2/spans'
 
 $vars = @('SERVICE_URL_DEFAULT_ZONE', 'CONFIG_SERVER_URL', 'API_GATEWAY_URL', 'ZIPKIN_SERVER_URL', 'EXCHANGE_PORT', 'CONVERT_PORT')
 Foreach ($e in $vars) {
